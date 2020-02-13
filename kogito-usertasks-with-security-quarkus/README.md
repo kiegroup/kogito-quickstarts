@@ -12,10 +12,33 @@ This example shows
 
 * working with user tasks
 * four eye principle with user tasks
-	
-	
-<p align="center"><img width=75% height=50% src="docs/images/process.png"></p>
 
+* Diagram	
+<p align="center"><img width=75% height=50% src="docs/images/process.png"></p>
+	
+Diagram Properties
+<p align="center"><img src="docs/images/diagramProperties.png"></p>
+
+* Diagram Properties
+<p align="center"><img src="docs/images/diagramProperties2.png"></p>
+
+* Diagram Properties
+<p align="center"><img src="docs/images/diagramProperties3.png"></p>
+
+* First Line Approval
+<p align="center"><img src="docs/images/firstLineApprovalUserTask.png"></p>
+
+* First Line Approval
+<p align="center"><img src="docs/images/firstLineApprovalUserTask2.png"></p>
+
+* First Line Approval
+<p align="center"><img src="docs/images/firstLineApprovalUserTaskAssignments.png"></p>
+
+* Second Line Approval
+<p align="center"><img src="docs/images/secondLineApprovalUserTask.png"></p>
+
+* Second Line Approval
+<p align="center"><img src="docs/images/secondLineApprovalUserTaskAssignments.png"></p>	
 
 ## Build and run
 
@@ -103,7 +126,7 @@ where `{uuid}` is the id of the given approval instance
 ### Complete first line approval task
 
 ```
-curl -X POST -d '{"approved" : true}' -H 'Content-Type:application/json' -H 'Accept:application/json' http://localhost:8080/approvals/{uuid}/firstLineApproval/{tuuid}?user=admin&group=managers'
+curl -X POST -d '{"approved" : true}' -H 'Content-Type:application/json' -H 'Accept:application/json' 'http://localhost:8080/approvals/{uuid}/firstLineApproval/{tuuid}?user=admin&group=managers'
 ```
 
 where `{uuid}` is the id of the given approval instance and `{tuuid}` is the id of the task instance
@@ -121,7 +144,7 @@ This should return empty response as the admin user was the first approver and b
 Repeating the request with another user will return task
 
 ```
-curl -H 'Content-Type:application/json' -H 'Accept:application/json' 'http://localhost:8080/approvals/{uuid}/tasks?user=john&group=managers'
+curl -u john:john -H 'Content-Type:application/json' -H 'Accept:application/json' 'http://localhost:8080/approvals/{uuid}/tasks?user=john&group=managers'
 ```
 
 
@@ -155,3 +178,7 @@ plus the approver who made the first one.
 	}
 }
 ```
+
+You should see a similar message after performing the second line approval
+
+<p align="center"><img src="docs/images/secondLineApprovalCurl.png"></p>
