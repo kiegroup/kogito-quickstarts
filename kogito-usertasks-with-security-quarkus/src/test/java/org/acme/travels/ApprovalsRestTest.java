@@ -14,30 +14,30 @@ import io.restassured.http.ContentType;
 
 @QuarkusTest
 public class ApprovalsRestTest {
-    
-    
+
+
     @Test
     public void testStartApprovalUnauthorized() {
-        
+
+
         given()
-                .header("Authorization", "Basic xxxxxxxxxxxx")
-                .body("{\"traveller\" : {\"firstName\" : \"John\",\"lastName\" : \"Doe\",\"email\" : \"john.doe@example.com\",\"nationality\" : \"American\",\"address\" : {\"street\" : \"main street\",\"city\" : \"Boston\",\"zipCode\" : \"10005\",\"country\" : \"US\"}}}")
+               .body("{\"traveller\" : {\"firstName\" : \"John\",\"lastName\" : \"Doe\",\"email\" : \"john.doe@example.com\",\"nationality\" : \"American\",\"address\" : {\"street\" : \"main street\",\"city\" : \"Boston\",\"zipCode\" : \"10005\",\"country\" : \"US\"}}}")
                .contentType(ContentType.JSON)
           .when()
                .post("/approvals")
           .then()
              .statusCode(401);
-             
+
     }
-    
+
     @SuppressWarnings("rawtypes")
     @Test
     public void testStartApprovalAuthorized() {
        // start new approval
        String id = given()
-               .header("Authorization", "Basic am9objpqb2hu")                   
-               .body("{\"traveller\" : {\"firstName\" : \"John\",\"lastName\" : \"Doe\",\"email\" : \"john.doe@example.com\",\"nationality\" : \"American\",\"address\" : {\"street\" : \"main street\",\"city\" : \"Boston\",\"zipCode\" : \"10005\",\"country\" : \"US\"}}}")                   
-               .contentType(ContentType.JSON)               
+               .header("Authorization", "Basic am9objpqb2hu")
+               .body("{\"traveller\" : {\"firstName\" : \"John\",\"lastName\" : \"Doe\",\"email\" : \"john.doe@example.com\",\"nationality\" : \"American\",\"address\" : {\"street\" : \"main street\",\"city\" : \"Boston\",\"zipCode\" : \"10005\",\"country\" : \"US\"}}}")
+               .contentType(ContentType.JSON)
           .when()
                .post("/approvals")
           .then()
@@ -46,13 +46,13 @@ public class ApprovalsRestTest {
        // get all active approvals
        given()
            .header("Authorization", "Basic am9objpqb2hu")
-           .accept(ContentType.JSON)           
+           .accept(ContentType.JSON)
        .when()
            .get("/approvals")
        .then()
            .statusCode(200)
            .body("$.size()", is(1), "[0].id", is(id));
-       
+
        // get just started approval
        given()
            .header("Authorization", "Basic am9objpqb2hu")
@@ -62,20 +62,20 @@ public class ApprovalsRestTest {
        .then()
            .statusCode(200)
            .body("id", is(id));
-       
+
        // tasks assigned in just started approval
-       
+
        Map taskInfo = given()
                .header("Authorization", "Basic am9objpqb2hu")
-               .accept(ContentType.JSON)               
+               .accept(ContentType.JSON)
            .when()
                .get("/approvals/" + id + "/tasks?user=admin&group=managers")
            .then()
                .statusCode(200).extract().as(Map.class);
-               
+
        assertEquals(1, taskInfo.size());
        taskInfo.containsValue("firstLineApproval");
-       
+
        // complete first task without authorization header as it authorization is managed on task level
        // thus user and group(s) must be provided
        String payload = "{}";
@@ -88,7 +88,7 @@ public class ApprovalsRestTest {
        .then()
            .statusCode(200)
            .body("id", is(id));
-       
+
        // lastly abort the approval
        given()
            .header("Authorization", "Basic am9objpqb2hu")
