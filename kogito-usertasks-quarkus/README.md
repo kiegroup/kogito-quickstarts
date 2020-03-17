@@ -115,7 +115,7 @@ curl -H 'Content-Type:application/json' -H 'Accept:application/json' http://loca
 ### Show tasks 
 
 ```
-curl -H 'Content-Type:application/json' -H 'Accept:application/json' 'http://localhost:8080/approvals/{uuid}/tasks?user=admin&group=managers'
+curl -H 'Content-Type:application/json' -H 'Accept:application/json' 'http://localhost:8080/approvals/{uuid}/tasks?user=manager&group=managers'
 ```
 
 where `{uuid}` is the id of the given approval instance
@@ -124,7 +124,7 @@ where `{uuid}` is the id of the given approval instance
 ### Complete first line approval task
 
 ```
-curl -X POST -d '{"approved" : true}' -H 'Content-Type:application/json' -H 'Accept:application/json' 'http://localhost:8080/approvals/{uuid}/firstLineApproval/{tuuid}?user=admin&group=managers'
+curl -X POST -d '{"approved" : true}' -H 'Content-Type:application/json' -H 'Accept:application/json' 'http://localhost:8080/approvals/{uuid}/firstLineApproval/{tuuid}?user=manager&group=managers'
 ```
 
 where `{uuid}` is the id of the given approval instance and `{tuuid}` is the id of the task instance
@@ -132,24 +132,24 @@ where `{uuid}` is the id of the given approval instance and `{tuuid}` is the id 
 ### Show tasks 
 
 ```
-curl -H 'Content-Type:application/json' -H 'Accept:application/json' 'http://localhost:8080/approvals/{uuid}/tasks?user=admin&group=managers'
+curl -H 'Content-Type:application/json' -H 'Accept:application/json' 'http://localhost:8080/approvals/{uuid}/tasks?user=manager&group=managers'
 ```
 
 where `{uuid}` is the id of the given approval instance
 
-This should return empty response as the admin user was the first approver and by that can't be assigned to another one.
+This should return empty response as the manager user was the first approver and by that can't be assigned to another one.
 
 Repeating the request with another user will return task
 
 ```
-curl -H 'Content-Type:application/json' -H 'Accept:application/json' 'http://localhost:8080/approvals/{uuid}/tasks?john=admin&group=managers'
+curl -H 'Content-Type:application/json' -H 'Accept:application/json' 'http://localhost:8080/approvals/{uuid}/tasks?john=manager&group=managers'
 ```
 
 
 ### Complete second line approval task
 
 ```
-curl -X POST -d '{"approved" : true}' -H 'Content-Type:application/json' -H 'Accept:application/json' 'http://localhost:8080/approvals/{uuid}/secondLineApproval/{tuuid}?john=admin&group=managers'
+curl -X POST -d '{"approved" : true}' -H 'Content-Type:application/json' -H 'Accept:application/json' 'http://localhost:8080/approvals/{uuid}/secondLineApproval/{tuuid}?john=manager&group=managers'
 ```
 
 where `{uuid}` is the id of the given approval instance and `{tuuid}` is the id of the task instance
@@ -159,7 +159,7 @@ plus the approver who made the first one.
 
 ```
 {
-	"approver":"admin",
+	"approver":"manager",
 	"firstLineApproval":true,
 	"id":"2eeafa82-d631-4554-8d8e-46614cbe3bdf",
 	"secondLineApproval":true,
@@ -180,6 +180,6 @@ plus the approver who made the first one.
 You should see a similar message after performing the second line approval after the curl command
 
 ```
-{"id":"f498de73-e02d-4829-905e-2f768479a4f1", "approver":"admin","firstLineApproval:true, "secondLineApproval":true,"traveller":{"firstName":"John","lastName":"Doe","email":"jon.doe@example.com","nationality":"American","address":{"street":"main street","city":"Boston","zipCode":"10005","country":"US"}}}
+{"id":"f498de73-e02d-4829-905e-2f768479a4f1", "approver":"manager","firstLineApproval:true, "secondLineApproval":true,"traveller":{"firstName":"John","lastName":"Doe","email":"jon.doe@example.com","nationality":"American","address":{"street":"main street","city":"Boston","zipCode":"10005","country":"US"}}}
 ```
 
